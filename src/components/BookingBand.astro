@@ -1,0 +1,26 @@
+---
+import BookButton from './BookButton.astro';
+import PhoneLink from './PhoneLink.astro';
+import { clinic } from '../data/site';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Book your next appointment' } = Astro.props;
+---
+
+<section class="bg-pine text-white">
+  <div class="shell flex flex-col gap-8 py-16 md:py-20 lg:flex-row lg:items-center lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-4xl text-white md:text-5xl">{title}</h2>
+      <p class="mt-4 text-lg text-white/80">
+        Choose a time that works for you on JaneApp, or call or text us at {clinic.phone.display}.
+      </p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <BookButton variant="on-dark" />
+      <PhoneLink variant="button-on-dark" label={`Call ${clinic.phone.display}`} />
+    </div>
+  </div>
+</section>

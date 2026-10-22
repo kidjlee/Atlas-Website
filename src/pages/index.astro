@@ -1,0 +1,242 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroRing from '../components/HeroRing.astro';
+import BookButton from '../components/BookButton.astro';
+import PhoneLink from '../components/PhoneLink.astro';
+import HoursTable from '../components/HoursTable.astro';
+import StaffCard from '../components/StaffCard.astro';
+import BookingBand from '../components/BookingBand.astro';
+import Icon from '../components/Icon.astro';
+import { clinic, formatPrice, maps, openDaysSummary, therapists, treatmentGroups } from '../data/site';
+import { url } from '../lib/url';
+
+import heroPhoto from '../assets/photos/hands-shoulder.jpg';
+import aboutPhoto from '../assets/photos/hands-back.jpg';
+import storefront from '../assets/storefront-sign.jpg';
+
+const highlights = [
+  {
+    title: 'Book online, any time',
+    body: `Choose your therapist, treatment, and time on JaneApp. Prefer to talk to someone? Call or text ${clinic.phone.display}.`,
+  },
+  {
+    title: 'ICBC claims',
+    body: 'Initial and follow-up visits are available if you have an active ICBC claim.',
+  },
+  {
+    title: 'Open weekends',
+    body: `We’re open ${openDaysSummary}.`,
+  },
+];
+---
+
+<BaseLayout
+  title="Atlas Massage Therapy | Registered Massage Therapy (RMT) in Abbotsford, BC"
+  description="Atlas Massage Therapy is a registered massage therapy clinic in Abbotsford, BC. Book online with our Registered Massage Therapists (RMTs) or call (604) 835-5520. ICBC visits available."
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="shell grid items-center gap-12 pt-10 pb-16 md:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pt-20 lg:pb-24">
+      <div class="max-w-xl">
+        <h1 class="text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-[4.25rem]">
+          Registered massage therapy in Abbotsford, BC
+        </h1>
+        <p class="lede mt-6">
+          Personalized, hands-on care from our Registered Massage Therapists, in a calm and welcoming space. Book online in
+          a few minutes, or give us a call.
+        </p>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <BookButton class="sm:px-7" />
+          <PhoneLink label={`Call ${clinic.phone.display}`} />
+        </div>
+        <p class="mt-6 text-base text-moss">{clinic.bookingNote}</p>
+      </div>
+      <HeroRing
+        image={heroPhoto}
+        alt="A massage therapist working on a client’s neck and shoulders"
+        position="58% 45%"
+      />
+    </div>
+
+    <!-- Quick facts -->
+    <div class="border-y border-pine/10 bg-white">
+      <div class="shell grid divide-y divide-pine/10 md:grid-cols-3 md:divide-x md:divide-y-0">
+        <a href={clinic.phone.href} class="group flex items-center gap-4 py-6 md:pr-8">
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
+            <Icon name="phone" class="size-6" />
+          </span>
+          <span>
+            <span class="block text-sm text-moss">Call or text</span>
+            <span class="block text-xl font-semibold text-pine group-hover:text-leaf-ink">{clinic.phone.display}</span>
+          </span>
+        </a>
+        <div class="flex items-center gap-4 py-6 md:px-8">
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
+            <Icon name="clock" class="size-6" />
+          </span>
+          <span>
+            <span class="block text-sm text-moss">Hours</span>
+            <span class="block font-semibold text-pine">Tue &amp; Fri – Sun, 8 AM – 8 PM</span>
+          </span>
+        </div>
+        <a href={maps.link} target="_blank" rel="noopener" class="group flex items-center gap-4 py-6 md:pl-8">
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
+            <Icon name="pin" class="size-6" />
+          </span>
+          <span>
+            <span class="block text-sm text-moss">Find us</span>
+            <span class="block font-semibold text-pine group-hover:text-leaf-ink">
+              {clinic.address.unit}, {clinic.address.street}
+            </span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="bg-mist">
+    <div class="shell grid items-center gap-12 py-20 md:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="relative order-2 lg:order-1">
+        <Picture
+          src={aboutPhoto}
+          alt="A Registered Massage Therapist treating a client’s back"
+          formats={['avif', 'webp']}
+          widths={[400, 640, 900]}
+          sizes="(min-width: 1024px) 30rem, 90vw"
+          class="aspect-[4/5] w-full rounded-t-[12rem] rounded-b-round object-cover lg:aspect-[3/4]"
+          loading="lazy"
+        />
+      </div>
+      <div class="order-1 lg:order-2">
+        <h2 class="text-4xl md:text-5xl">Hands-on care, tailored to you</h2>
+        <div class="mt-6 space-y-4 text-lg text-moss">
+          <p>
+            Welcome to Atlas Massage Therapy, a registered massage therapy clinic in Abbotsford, BC. Our Registered
+            Massage Therapists provide personalized care in a comfortable, welcoming environment.
+          </p>
+          <p>
+            Whether you’re looking for relief from muscle tension, help managing discomfort, or support for your overall
+            wellness, we’re here to help you feel your best.
+          </p>
+        </div>
+        <ul class="mt-10 space-y-6">
+          {
+            highlights.map((h) => (
+              <li class="flex gap-4">
+                <svg class="mt-1 size-6 shrink-0 text-leaf" viewBox="26 20 48 32" aria-hidden="true">
+                  <path d="M28.5 46 C35.5 29.5 52.5 21 71 25.5 C63 42.5 46 50.5 28.5 46Z" fill="currentColor" />
+                </svg>
+                <div>
+                  <h3 class="font-sans text-lg font-semibold text-pine">{h.title}</h3>
+                  <p class="mt-1 text-moss">{h.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Treatments -->
+  <section>
+    <div class="shell grid gap-12 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      <div class="lg:sticky lg:top-32 lg:self-start">
+        <h2 class="text-4xl md:text-5xl">Treatments and rates</h2>
+        <p class="mt-5 text-lg text-moss">
+          Choose a 30, 45, or 60 minute visit. You’ll see live availability for each therapist when you book on JaneApp.
+        </p>
+        <BookButton class="mt-8" />
+      </div>
+      <div class="space-y-12">
+        {
+          treatmentGroups.map((group) => (
+            <div>
+              <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-2 border-pine pb-3">
+                <h3 class="text-2xl md:text-3xl">{group.heading}</h3>
+                {group.note && <p class="text-sm text-moss">{group.note}</p>}
+              </div>
+              <ul>
+                {group.items.map((item) => (
+                  <li class="flex items-baseline justify-between gap-6 border-b border-pine/10 py-4">
+                    <span>
+                      <span class="font-semibold text-ink">{item.name}</span>
+                      <span class="ml-2 text-moss">{item.minutes} min</span>
+                    </span>
+                    {item.price != null && (
+                      <span class="text-lg font-semibold text-pine tabular-nums">{formatPrice(item.price)}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="bg-mist">
+    <div class="shell py-20 md:py-28">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-2xl">
+          <h2 class="text-4xl md:text-5xl">Meet your therapists</h2>
+          <p class="mt-4 text-lg text-moss">
+            Our Registered Massage Therapists are here to help. Book with the therapist of your choice, or pick any
+            available time.
+          </p>
+        </div>
+        <a href={url('our-team/')} class="text-link shrink-0">Meet the team</a>
+      </div>
+      <div class="mt-12 grid gap-12 sm:grid-cols-2 lg:gap-16">
+        {therapists.map((t) => <StaffCard therapist={t} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Visit -->
+  <section>
+    <div class="shell grid gap-12 py-20 md:py-28 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <h2 class="text-4xl md:text-5xl">Hours and location</h2>
+        <p class="mt-4 text-lg text-moss">{clinic.bookingNote}</p>
+        <HoursTable class="mt-8" />
+      </div>
+      <div class="flex flex-col">
+        <figure class="overflow-hidden rounded-soft border border-pine/10">
+          <Picture
+            src={storefront}
+            alt="The Atlas Massage Therapy sign on the front of the clinic"
+            formats={['avif', 'webp']}
+            widths={[560, 1024]}
+            sizes="(min-width: 1024px) 34rem, 92vw"
+            class="w-full"
+            loading="lazy"
+          />
+        </figure>
+        <address class="mt-8 text-lg not-italic">
+          <span class="block font-display text-2xl text-pine">{clinic.name}</span>
+          <span class="mt-2 block text-ink">
+            {clinic.address.unit}, {clinic.address.street}<br />
+            {clinic.address.city}, {clinic.address.region} {clinic.address.postalCode}
+          </span>
+        </address>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a href={maps.directions} target="_blank" rel="noopener" class="btn btn-secondary">
+            <Icon name="directions" class="size-5" />
+            Get directions
+          </a>
+          <a href={url('contact/')} class="btn btn-secondary">
+            <Icon name="mail" class="size-5" />
+            Contact details
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <BookingBand />
+</BaseLayout>

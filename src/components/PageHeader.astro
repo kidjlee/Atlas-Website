@@ -1,0 +1,25 @@
+---
+interface Props {
+  title: string;
+  intro?: string;
+}
+
+const { title, intro } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-b border-pine/10 bg-mist">
+  <svg
+    class="pointer-events-none absolute -top-16 -right-36 w-[20rem] text-leaf/12 md:-top-32 md:right-[-4rem] md:w-[34rem] md:text-leaf/15"
+    viewBox="0 0 100 100"
+    aria-hidden="true"
+  >
+    <path
+      d="M89.71 28.87 A45 45 0 1 1 56.26 5.44 A39.8 39.8 0 1 0 89.71 28.87Z"
+      fill="currentColor"></path>
+  </svg>
+  <div class="shell relative py-16 md:py-24">
+    <h1 class="max-w-3xl text-5xl md:text-6xl">{title}</h1>
+    {intro && <p class="lede mt-5 max-w-2xl">{intro}</p>}
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BookButton from '../components/BookButton.astro';
+import BookingBand from '../components/BookingBand.astro';
+import { clinic, therapists } from '../data/site';
+import { teamPhoto } from '../lib/images';
+import { absoluteUrl } from '../lib/url';
+
+const people = therapists.map((t) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: t.name,
+  jobTitle: t.title,
+  description: t.bio.join(' '),
+  url: absoluteUrl(`our-team/#${t.slug}`, Astro.site),
+  worksFor: { '@id': `${absoluteUrl('', Astro.site)}#clinic` },
+}));
+---
+
+<BaseLayout
+  title="Our Team | Registered Massage Therapists in Abbotsford | Atlas Massage Therapy"
+  description="Meet the Registered Massage Therapists (RMTs) at Atlas Massage Therapy in Abbotsford, BC, and book an appointment with Quy Duong or Michelle Sison online."
+  schema={people}
+>
+  <PageHeader
+    title="Our team"
+    intro="Meet the Registered Massage Therapists at Atlas Massage Therapy. Book with a specific therapist, or choose any available time on JaneApp."
+  />
+
+  <div class="shell divide-y divide-pine/10">
+    {
+      therapists.map((t, i) => {
+        const photo = teamPhoto(t.photo);
+        return (
+          <section id={t.slug} class="scroll-mt-28 py-16 md:py-24" aria-labelledby={`${t.slug}-name`}>
+            <div
+              class:list={[
+                'grid items-center gap-10 lg:gap-20',
+                i % 2 === 1 ? 'md:grid-cols-[1.2fr_0.8fr]' : 'md:grid-cols-[0.8fr_1.2fr]',
+              ]}
+            >
+              <div class:list={['relative', i % 2 === 1 && 'md:order-2']}>
+                <div class="relative mx-auto max-w-sm md:max-w-none">
+                  {photo && (
+                    <Picture
+                      src={photo}
+                      alt={`Portrait of ${t.name}, ${t.title}`}
+                      formats={['avif', 'webp']}
+                      widths={[400, 640, 800]}
+                      sizes="(min-width: 768px) 26rem, 90vw"
+                      class="relative aspect-[4/5] w-full rounded-round object-cover object-top"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                    />
+                  )}
+                </div>
+              </div>
+              <div class:list={[i % 2 === 1 && 'md:order-1']}>
+                <h2 id={`${t.slug}-name`} class="text-4xl md:text-5xl">
+                  {t.name}
+                </h2>
+                <p class="mt-2 text-lg font-semibold text-leaf-ink">
+                  {t.title}
+                  {t.pronouns && <span class="font-normal text-moss"> ({t.pronouns})</span>}
+                </p>
+                <div class="mt-6 max-w-[65ch] space-y-4 text-lg text-moss">
+                  {t.bio.map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+                <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <BookButton href={t.bookingUrl} label={`Book with ${t.firstName}`} />
+                  <a href={clinic.phone.href} class="btn btn-secondary">
+                    Call {clinic.phone.display}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+
+  <BookingBand title="Not sure who to book with?" />
+</BaseLayout>

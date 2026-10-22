@@ -1,0 +1,107 @@
+---
+import { formatHours, hours } from '../data/site';
+
+interface Props {
+  showStatus?: boolean;
+  class?: string;
+}
+
+const { showStatus = true, class: className } = Astro.props;
+---
+
+<div class:list={['hours-widget', className]} data-hours-widget data-hours={JSON.stringify(hours)}>
+  {
+    showStatus && (
+      <p class="mb-4 flex items-center gap-2.5 text-base font-semibold text-pine" aria-live="polite">
+        <span class="relative flex size-2.5" aria-hidden="true">
+          <span class="size-2.5 rounded-full bg-moss/40" data-status-dot />
+        </span>
+        <span data-status-text>Open Tuesday and Friday to Sunday</span>
+      </p>
+    )
+  }
+  <table class="w-full border-collapse text-left">
+    <caption class="sr-only">Business hours</caption>
+    <tbody>
+      {
+        hours.map((d) => (
+          <tr
+            data-day={d.day}
+            class="group border-b border-pine/10 last:border-b-0 data-[today]:bg-mist"
+          >
+            <th scope="row" class="py-2.5 pr-4 pl-3 font-medium text-ink group-data-[today]:font-semibold group-data-[today]:text-pine">
+              {d.day}
+              <span class="ml-1.5 hidden rounded-full bg-leaf/15 px-2 py-0.5 align-middle text-xs font-semibold text-pine group-data-[today]:inline">
+                Today
+              </span>
+            </th>
+            <td class:list={['py-2.5 pr-3 text-right tabular-nums', d.open ? 'text-ink' : 'text-moss']}>
+              {formatHours(d)}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<script>
+  type Day = { day: string; open: string | null; close: string | null };
+
+  const toMinutes = (t: string) => {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  const format = (t: string) => {
+    const [h, m] = t.split(':').map(Number);
+    const hour = h % 12 === 0 ? 12 : h % 12;
+    return `${hour}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`;
+  };
+
+  function vancouverNow() {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Vancouver',
+      weekday: 'long',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(new Date());
+    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+    return { weekday: get('weekday'), minutes: Number(get('hour')) * 60 + Number(get('minute')) };
+  }
+
+  function status(days: Day[]) {
+    const { weekday, minutes } = vancouverNow();
+    const todayIndex = days.findIndex((d) => d.day === weekday);
+    const today = days[todayIndex];
+
+    if (today?.open && today.close) {
+      if (minutes < toMinutes(today.open)) return { open: false, text: `Closed now. Opens today at ${format(today.open)}` };
+      if (minutes < toMinutes(today.close)) return { open: true, text: `Open now until ${format(today.close)}` };
+    }
+
+    for (let i = 1; i <= 7; i++) {
+      const next = days[(todayIndex + i) % 7];
+      if (next.open) {
+        const when = i === 1 ? 'tomorrow' : next.day;
+        return { open: false, text: `Closed now. Opens ${when} at ${format(next.open)}` };
+      }
+    }
+    return { open: false, text: 'Closed now' };
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-hours-widget]').forEach((widget) => {
+    const days: Day[] = JSON.parse(widget.dataset.hours ?? '[]');
+    const { weekday } = vancouverNow();
+    widget.querySelector(`[data-day="${weekday}"]`)?.setAttribute('data-today', '');
+
+    const text = widget.querySelector('[data-status-text]');
+    const dot = widget.querySelector('[data-status-dot]');
+    if (!text || !dot) return;
+    const s = status(days);
+    text.textContent = s.text;
+    dot.classList.toggle('bg-leaf', s.open);
+    dot.classList.toggle('bg-moss/40', !s.open);
+  });
+</script>

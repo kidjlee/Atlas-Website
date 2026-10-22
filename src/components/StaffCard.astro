@@ -1,0 +1,49 @@
+---
+import { Picture } from 'astro:assets';
+import type { Therapist } from '../data/site';
+import { teamPhoto } from '../lib/images';
+import { url } from '../lib/url';
+
+interface Props {
+  therapist: Therapist;
+}
+
+const { therapist } = Astro.props;
+const photo = teamPhoto(therapist.photo);
+---
+
+<article class="flex flex-col">
+  <div class="relative mb-6 overflow-hidden rounded-round bg-birch">
+    {
+      photo && (
+        <Picture
+          src={photo}
+          alt={`Portrait of ${therapist.name}, ${therapist.title}`}
+          formats={['avif', 'webp']}
+          widths={[360, 560, 800]}
+          sizes="(min-width: 1024px) 26rem, (min-width: 640px) 45vw, 90vw"
+          class="aspect-[4/5] w-full object-cover object-top"
+          loading="lazy"
+        />
+      )
+    }
+  </div>
+  <h3 class="text-3xl">{therapist.name}</h3>
+  <p class="mt-1 text-base font-semibold text-leaf-ink">
+    {therapist.title}
+    {therapist.pronouns && <span class="font-normal text-moss"> ({therapist.pronouns})</span>}
+  </p>
+  <p class="mt-3 text-moss">{therapist.summary}</p>
+  <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+    <a
+      href={therapist.bookingUrl}
+      target="_blank"
+      rel="noopener"
+      class="btn btn-primary min-h-11 px-5"
+      aria-label={`Book with ${therapist.firstName} (opens JaneApp in a new tab)`}
+    >
+      Book with {therapist.firstName}
+    </a>
+    <a href={url(`our-team/#${therapist.slug}`)} class="text-link">Read {therapist.firstName}’s profile</a>
+  </div>
+</article>

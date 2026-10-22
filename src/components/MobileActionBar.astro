@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { clinic } from '../data/site';
+---
+
+<div
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-pine/10 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(23,63,43,0.25)] backdrop-blur-md lg:hidden"
+  role="region"
+  aria-label="Quick actions"
+>
+  <div class="mx-auto grid max-w-xl grid-cols-2 gap-3">
+    <a href={clinic.phone.href} class="btn btn-secondary min-h-12 px-3" aria-label={`Call ${clinic.phone.display}`}>
+      <Icon name="phone" class="size-5" />
+      Call
+    </a>
+    <a
+      href={clinic.bookingUrl}
+      target="_blank"
+      rel="noopener"
+      class="btn btn-primary min-h-12 px-3"
+      aria-label="Book an appointment (opens JaneApp in a new tab)"
+    >
+      <Icon name="calendar" class="size-5" />
+      Book
+    </a>
+  </div>
+</div>

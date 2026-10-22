@@ -1,0 +1,87 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import BookButton from './BookButton.astro';
+import { clinic, groupedHours, maps, nav } from '../data/site';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-pine-deep pb-28 text-white/85 lg:pb-0">
+  <div class="shell grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.1fr_1.35fr_1.15fr_0.75fr] lg:gap-10">
+    <div class="space-y-5">
+      <Logo tone="light" class="h-10 w-auto" />
+      <p class="max-w-xs text-base leading-relaxed text-white/70">
+        Registered massage therapy in Abbotsford, BC.
+      </p>
+      <BookButton variant="on-dark" class="min-h-11 px-5" />
+    </div>
+
+    <div>
+      <h2 class="mb-4 font-sans text-base font-semibold text-white">Contact</h2>
+      <ul class="space-y-3 text-base">
+        <li>
+          <a href={clinic.phone.href} class="inline-flex items-center gap-2.5 hover:text-white">
+            <Icon name="phone" class="size-5 text-leaf" />
+            {clinic.phone.display}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${clinic.email}`} class="inline-flex items-center gap-2.5 [overflow-wrap:anywhere] hover:text-white">
+            <Icon name="mail" class="size-5 shrink-0 text-leaf" />
+            {clinic.email}
+          </a>
+        </li>
+        <li>
+          <a href={maps.link} target="_blank" rel="noopener" class="inline-flex items-start gap-2.5 hover:text-white">
+            <Icon name="pin" class="mt-0.5 size-5 shrink-0 text-leaf" />
+            <span>
+              {clinic.address.unit}, {clinic.address.street}<br />
+              {clinic.address.city}, {clinic.address.region} {clinic.address.postalCode}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="mb-4 font-sans text-base font-semibold text-white">Hours</h2>
+      <dl class="space-y-2 text-base">
+        {
+          groupedHours().map((g) => (
+            <div class="flex justify-between gap-4">
+              <dt>{g.days}</dt>
+              <dd class:list={['tabular-nums', g.hours === 'Closed' ? 'text-white/55' : 'text-white']}>{g.hours}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <div>
+      <h2 class="mb-4 font-sans text-base font-semibold text-white">Explore</h2>
+      <ul class="space-y-3 text-base">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={url(item.path)} class="hover:text-white">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={clinic.bookingUrl} target="_blank" rel="noopener" class="hover:text-white">Book on JaneApp</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="shell flex flex-col gap-2 py-6 text-sm text-white/55 sm:flex-row sm:justify-between">
+      <p>© {year} {clinic.name}. All rights reserved.</p>
+      <p>{clinic.address.city}, British Columbia</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,37 @@
+---
+import Icon from './Icon.astro';
+import { clinic } from '../data/site';
+
+interface Props {
+  href?: string;
+  label?: string;
+  variant?: 'primary' | 'secondary' | 'on-dark';
+  class?: string;
+  icon?: boolean;
+}
+
+const {
+  href = clinic.bookingUrl,
+  label = 'Book an appointment',
+  variant = 'primary',
+  class: className,
+  icon = true,
+} = Astro.props;
+
+const variantClass = {
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+  'on-dark': 'btn-on-dark',
+}[variant];
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener"
+  class:list={['btn', variantClass, className]}
+  aria-label={`${label} (opens JaneApp in a new tab)`}
+>
+  {icon && <Icon name="calendar" class="size-5 shrink-0" />}
+  <span>{label}</span>
+</a>

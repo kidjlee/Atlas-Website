@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BookButton from '../components/BookButton.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="Page not found | Atlas Massage Therapy" description="This page doesn’t exist. Head back to the Atlas Massage Therapy home page or book an appointment online.">
+  <section class="shell flex min-h-[60vh] flex-col items-start justify-center py-24">
+    <h1 class="text-5xl md:text-6xl">This page doesn’t exist</h1>
+    <p class="lede mt-5 max-w-xl">The link may be out of date. You can head back to the home page or book an appointment.</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <a href={url()} class="btn btn-secondary">Go to the home page</a>
+      <BookButton />
+    </div>
+  </section>
+</BaseLayout>

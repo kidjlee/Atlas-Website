@@ -1,0 +1,112 @@
+---
+import '@fontsource-variable/figtree';
+import '@fontsource/marcellus';
+import '../styles/global.css';
+import figtreeWoff2 from '@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2?url';
+import marcellusWoff2 from '@fontsource/marcellus/files/marcellus-latin-400-normal.woff2?url';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileActionBar from '../components/MobileActionBar.astro';
+import { clinic, hours, maps, treatmentGroups } from '../data/site';
+import { absoluteUrl } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Extra JSON-LD objects for this page. */
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, schema = [] } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = absoluteUrl('og-image.png', Astro.site);
+const homeUrl = absoluteUrl('', Astro.site);
+
+const prices = treatmentGroups.flatMap((g) => g.items.map((i) => i.price).filter((p): p is number => p != null));
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthAndBeautyBusiness',
+  '@id': `${homeUrl}#clinic`,
+  name: clinic.name,
+  description: clinic.shortDescription,
+  url: homeUrl,
+  logo: absoluteUrl('icon-512.png', Astro.site),
+  image: ogImage,
+  telephone: clinic.phone.e164,
+  email: clinic.email,
+  priceRange: `$${Math.min(...prices)} – $${Math.max(...prices)}`,
+  currenciesAccepted: 'CAD',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `103-${clinic.address.street}`,
+    addressLocality: clinic.address.city,
+    addressRegion: clinic.address.region,
+    postalCode: clinic.address.postalCode,
+    addressCountry: clinic.address.country,
+  },
+  hasMap: maps.link,
+  areaServed: { '@type': 'City', name: 'Abbotsford, BC' },
+  openingHoursSpecification: hours
+    .filter((d) => d.open && d.close)
+    .map((d) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: `https://schema.org/${d.schemaDay}`,
+      opens: d.open,
+      closes: d.close,
+    })),
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: { '@type': 'EntryPoint', urlTemplate: clinic.bookingUrl, actionPlatform: ['https://schema.org/DesktopWebPlatform', 'https://schema.org/MobileWebPlatform'] },
+    name: 'Book an appointment',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#173f2b" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <link rel="icon" href={absoluteUrl('favicon.ico')} sizes="32x32" />
+    <link rel="icon" href={absoluteUrl('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={absoluteUrl('apple-touch-icon.png')} />
+    <link rel="sitemap" href={absoluteUrl('sitemap-index.xml')} />
+
+    <link rel="preload" href={figtreeWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={marcellusWoff2} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={clinic.name} />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${clinic.name} logo`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="geo.region" content="CA-BC" />
+    <meta name="geo.placename" content="Abbotsford" />
+
+    <script type="application/ld+json" set:html={JSON.stringify([business, ...schema])} />
+  </head>
+  <body class="min-h-dvh">
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <MobileActionBar />
+  </body>
+</html>

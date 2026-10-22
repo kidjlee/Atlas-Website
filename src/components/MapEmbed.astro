@@ -1,0 +1,19 @@
+---
+import { clinic, fullAddress, maps } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['overflow-hidden rounded-soft border border-pine/10 bg-mist', className]}>
+  <iframe
+    src={maps.embed}
+    title={`Map showing ${clinic.name} at ${fullAddress}`}
+    class="block h-full min-h-80 w-full"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen></iframe>
+</div>

@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { clinic } from '../data/site';
+
+interface Props {
+  variant?: 'button' | 'button-on-dark' | 'text';
+  label?: string;
+  class?: string;
+}
+
+const { variant = 'button', label = clinic.phone.display, class: className } = Astro.props;
+
+const variantClass = {
+  button: 'btn btn-secondary',
+  'button-on-dark': 'btn btn-outline-on-dark',
+  text: 'inline-flex items-center gap-2 font-semibold text-pine hover:text-leaf-ink transition-colors',
+}[variant];
+---
+
+<a
+  href={clinic.phone.href}
+  class:list={[variantClass, className]}
+  aria-label={label === clinic.phone.display ? `Call ${clinic.phone.display}` : undefined}
+>
+  <Icon name="phone" class="size-5 shrink-0" />
+  <span>{label}</span>
+</a>

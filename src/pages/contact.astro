@@ -1,0 +1,99 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BookButton from '../components/BookButton.astro';
+import HoursTable from '../components/HoursTable.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Icon from '../components/Icon.astro';
+import { clinic, maps } from '../data/site';
+import storefront from '../assets/storefront-sign.jpg';
+---
+
+<BaseLayout
+  title="Contact Us | Atlas Massage Therapy, Abbotsford, BC"
+  description="Call or text Atlas Massage Therapy at (604) 835-5520. Find us at Unit 103, 33069 Marshall Rd, Abbotsford, BC V2S 1K4. See our hours and book your RMT appointment online."
+>
+  <PageHeader title="Contact us" intro="Call or text with any questions, or book your appointment online." />
+
+  <section class="shell grid gap-12 py-16 md:py-24 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+    <div class="space-y-12">
+      <div>
+        <h2 class="text-3xl md:text-4xl">{clinic.name}</h2>
+        <a
+          href={clinic.phone.href}
+          class="mt-6 block font-display text-[2.6rem] leading-none text-pine transition-colors hover:text-leaf-ink sm:text-5xl"
+          aria-label={`Call ${clinic.phone.display}`}
+        >
+          {clinic.phone.display}
+        </a>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2">
+          <a href={clinic.phone.href} class="btn btn-primary w-full">
+            <Icon name="phone" class="size-5" />
+            Call us
+          </a>
+          <a href={clinic.phone.sms} class="btn btn-secondary w-full">
+            <Icon name="message" class="size-5" />
+            Send a text
+          </a>
+        </div>
+      </div>
+
+      <dl class="space-y-8">
+        <div class="flex gap-4">
+          <dt class="mt-1 shrink-0 text-leaf-ink">
+            <Icon name="pin" class="size-6" />
+            <span class="sr-only">Address</span>
+          </dt>
+          <dd>
+            <address class="text-lg not-italic text-ink">
+              {clinic.address.unit}, {clinic.address.street}<br />
+              {clinic.address.city}, {clinic.address.region} {clinic.address.postalCode}
+            </address>
+            <a href={maps.directions} target="_blank" rel="noopener" class="text-link mt-2 inline-block">Get directions</a>
+          </dd>
+        </div>
+        <div class="flex gap-4">
+          <dt class="mt-1 shrink-0 text-leaf-ink">
+            <Icon name="mail" class="size-6" />
+            <span class="sr-only">Email</span>
+          </dt>
+          <dd>
+            <a href={`mailto:${clinic.email}`} class="text-lg break-all text-ink hover:text-leaf-ink">{clinic.email}</a>
+          </dd>
+        </div>
+        <div class="flex gap-4">
+          <dt class="mt-1 shrink-0 text-leaf-ink">
+            <Icon name="calendar" class="size-6" />
+            <span class="sr-only">Booking</span>
+          </dt>
+          <dd>
+            <p class="text-lg text-ink">{clinic.bookingNote}</p>
+            <BookButton class="mt-5" />
+          </dd>
+        </div>
+      </dl>
+
+      <div>
+        <h2 class="text-3xl">Hours</h2>
+        <HoursTable class="mt-6" />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-8">
+      <MapEmbed class="h-[26rem] lg:h-[34rem]" />
+      <figure>
+        <Picture
+          src={storefront}
+          alt="The Atlas Massage Therapy sign on the front of the clinic"
+          formats={['avif', 'webp']}
+          widths={[560, 1024]}
+          sizes="(min-width: 1024px) 36rem, 92vw"
+          class="w-full rounded-soft border border-pine/10"
+          loading="lazy"
+        />
+        <figcaption class="mt-3 text-base text-moss">Look for our sign at Unit 103.</figcaption>
+      </figure>
+    </div>
+  </section>
+</BaseLayout>
