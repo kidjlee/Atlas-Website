@@ -155,7 +155,7 @@ export const treatmentGroups: { heading: string; note?: string; items: Treatment
 ];
 
 export function formatPrice(price: number): string {
-  return price % 1 === 0 ? `$${price}` : `$${price.toFixed(2)}`;
+  return `$${price.toFixed(2)}`;
 }
 
 export const nav = [
