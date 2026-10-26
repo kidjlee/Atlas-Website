@@ -23,10 +23,9 @@ jobs:
 
       - name: Install, build, and upload the site
         uses: withastro/action@v6
-        # When the custom domain is connected, uncomment and set these (see README.md):
-        # env:
-        #   SITE_URL: 'https://example.com'
-        #   BASE_PATH: '/'
+        env:
+          SITE_URL: 'https://atlasabbotsford.ca'
+          BASE_PATH: '/'
 
   deploy:
     needs: build
