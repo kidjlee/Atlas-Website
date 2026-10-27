@@ -11,9 +11,9 @@ import Icon from '../components/Icon.astro';
 import { clinic, formatPrice, maps, openDaysSummary, therapists, treatmentGroups } from '../data/site';
 import { url } from '../lib/url';
 
-import heroPhoto from '../assets/photos/hands-shoulder.jpg';
-import aboutPhoto from '../assets/photos/hands-back.jpg';
-import storefront from '../assets/storefront-sign.jpg';
+import heroPhoto from '../assets/photos/hero-shoulder.jpg';
+import aboutPhoto from '../assets/photos/intro-back.jpg';
+import storefront from '../assets/photos/exterior-night.jpg';
 
 const highlights = [
   {
@@ -55,7 +55,6 @@ const highlights = [
       <HeroRing
         image={heroPhoto}
         alt="A massage therapist working on a client’s neck and shoulders"
-        position="58% 45%"
       />
     </div>
 
@@ -103,7 +102,7 @@ const highlights = [
           src={aboutPhoto}
           alt="A Registered Massage Therapist treating a client’s back"
           formats={['avif', 'webp']}
-          widths={[400, 640, 900]}
+          widths={[400, 633]}
           sizes="(min-width: 1024px) 30rem, 90vw"
           class="aspect-[4/5] w-full rounded-t-[12rem] rounded-b-round object-cover lg:aspect-[3/4]"
           loading="lazy"
@@ -209,7 +208,7 @@ const highlights = [
         <figure class="overflow-hidden rounded-soft border border-pine/10">
           <Picture
             src={storefront}
-            alt="The Atlas Massage Therapy sign on the front of the clinic"
+            alt="The Atlas Massage Therapy storefront at night, with its illuminated sign and reception area"
             formats={['avif', 'webp']}
             widths={[560, 1024]}
             sizes="(min-width: 1024px) 34rem, 92vw"

@@ -7,7 +7,7 @@ import HoursTable from '../components/HoursTable.astro';
 import MapEmbed from '../components/MapEmbed.astro';
 import Icon from '../components/Icon.astro';
 import { clinic, maps } from '../data/site';
-import storefront from '../assets/storefront-sign.jpg';
+import storefront from '../assets/photos/exterior-night.jpg';
 ---
 
 <BaseLayout
@@ -85,7 +85,7 @@ import storefront from '../assets/storefront-sign.jpg';
       <figure>
         <Picture
           src={storefront}
-          alt="The Atlas Massage Therapy sign on the front of the clinic"
+          alt="The Atlas Massage Therapy storefront at night, with its illuminated sign and reception area"
           formats={['avif', 'webp']}
           widths={[560, 1024]}
           sizes="(min-width: 1024px) 36rem, 92vw"
