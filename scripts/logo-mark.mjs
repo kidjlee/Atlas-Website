@@ -30,23 +30,25 @@ function stroke({ angle, outer, width, steps = 72 }) {
 const R = 45;
 
 // Main ring: starts as a thin tail just outside the upper swoosh at 9 o'clock,
-// runs round the bottom (its heaviest part) and tapers out at about 1 o'clock.
+// runs round the bottom (its heaviest part) and tapers out just past 1 o'clock.
 export const ring = stroke({
-  angle: (t) => 186 - t * 222,
+  angle: (t) => 186 - t * 232,
   outer: (t) => R + 1.6 * (1 - smoothstep(0, 0.2, t)),
   width: (t) => 10.4 * Math.sin(Math.PI * t) ** 0.78,
 });
 
 // Upper swoosh: starts at 12 o'clock on the same circle, sweeps round the top
-// left, then its tail curls inward, crossing inside the start of the main ring.
+// left, then its tail eases inward, crossing inside the start of the main ring.
 export const swoosh = stroke({
-  angle: (t) => 274 - t * 124,
-  outer: (t) => R - 8.5 * smoothstep(0.6, 1, t),
+  angle: (t) => 274 - t * 128,
+  outer: (t) => R - 8 * smoothstep(0.5, 1.05, t),
   width: (t) => 7 * Math.sin(Math.PI * t) ** 0.7,
 });
 
-// Leaf pointing toward the opening, and the thin arc that sits just above it.
-export const leaf = 'M24.6 33.6C33.5 21.8 50 15.6 75 19.8C66 40.5 45.5 47.5 24.6 33.6Z';
-export const leafArc = 'M35.6 17.4Q56.6 9 75.4 19.2Q56.2 14 35.6 17.4Z';
+// Leaf: a short, rounded point on the left, and a tip on the right whose lower edge
+// hooks upward. The thin crease above it curls down at its right end.
+export const leaf =
+  'M26.5 34.2C33 23.5 46 16.6 60 17.2C67 17.5 72.5 18.6 77.2 20.6C71.6 22 68.6 25.4 65.6 29.4C58 39.6 42 44.2 26.5 34.2Z';
+export const leafArc = 'M37.6 17.8Q52 10.4 64.4 14.6Q66.6 15.8 65.6 18Q53 13 37.6 17.8Z';
 
 export const paths = { ring, swoosh, leaf, leafArc };
