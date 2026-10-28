@@ -14,7 +14,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 
 
 def save(im: Image.Image, name: str) -> None:
-    im.save(OUT / name, "JPEG", quality=90, optimize=True, progressive=True)
+    im.save(OUT / name, "JPEG", quality=94, optimize=True, progressive=True)
     print(f"{name}: {im.size[0]}x{im.size[1]}")
 
 
@@ -50,7 +50,10 @@ ImageDraw.Draw(edge).ellipse((40, 40, size - 41, size - 41), fill=0)
 pixels = [hero.getpixel((x, y)) for y in range(0, size, 4) for x in range(0, size, 4) if edge.getpixel((x, y))]
 tone = tuple(sum(p[i] for p in pixels) // len(pixels) for i in range(3))
 hero = Image.composite(hero, Image.new("RGB", hero.size, tone), mask)
-hero = hero.filter(ImageFilter.UnsharpMask(radius=1, percent=40, threshold=2))
+# Large hero displays are wider than the source, so upscale once with a high-quality
+# filter here instead of letting the browser stretch it.
+hero = hero.resize((1024, 1024), Image.Resampling.LANCZOS)
+hero = hero.filter(ImageFilter.UnsharpMask(radius=1.6, percent=70, threshold=2))
 save(hero, "hero-shoulder.jpg")
 
 # Intro: the source sits inside a white arch frame. Crop to the photo's bounding box;

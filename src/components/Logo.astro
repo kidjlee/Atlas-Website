@@ -9,9 +9,7 @@ interface Props {
 
 const { class: className = 'h-10 w-auto', tone = 'dark' } = Astro.props;
 
-// The SVG defines a mask by id, so each instance needs its own id.
-const uid = `atlas-leaf-${Math.random().toString(36).slice(2, 8)}`;
-const svg = logoSvg.replaceAll('atlas-leaf-cut', uid).replace('<svg ', `<svg class="${className}" `);
+const svg = logoSvg.replace('<svg ', `<svg class="${className}" `);
 ---
 
 <span class:list={['inline-flex', tone === 'light' ? 'text-white' : 'text-ink']} set:html={svg} />

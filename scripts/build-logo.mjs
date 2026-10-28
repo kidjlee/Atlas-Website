@@ -6,6 +6,8 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import opentype from 'opentype.js';
+import { Resvg } from '@resvg/resvg-js';
+import { paths } from './logo-mark.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const fontDir = join(root, 'scripts/fonts');
@@ -18,36 +20,9 @@ const loadFont = (file) => {
 const cinzel = loadFont('cinzel-latin-700-normal.ttf');
 const montserrat = loadFont('montserrat-latin-700-normal.ttf');
 
-const r = (n) => Math.round(n * 100) / 100;
+// ---------- Mark (viewBox 0 0 100 100, traced from the sign in logo-mark.mjs) ----------
 
-// ---------- Mark (viewBox 0 0 100 100) ----------
-
-const C = 50;
-const polar = (radius, deg) => {
-  const a = (deg * Math.PI) / 180;
-  return [r(C + radius * Math.cos(a)), r(C + radius * Math.sin(a))];
-};
-
-// Main swoosh: a crescent open at the top right, tapering at both ends and
-// heaviest at the bottom left, like the sign.
-const ringStart = polar(45, -28);
-const ringEnd = polar(45, -82);
-const ring = `M${ringStart} A45 45 0 1 1 ${ringEnd} A39.8 39.8 0 1 0 ${ringStart}Z`;
-
-// Inner blade hugging the lower left of the ring.
-const bladeStart = polar(31, 105);
-const bladeEnd = polar(31, 196);
-const blade = `M${bladeStart} A31 31 0 0 1 ${bladeEnd} A50 50 0 0 0 ${bladeStart}Z`;
-
-// Leaf pointing toward the opening, with the midrib cut out.
-const leaf = 'M28.5 46 C35.5 29.5 52.5 21 71 25.5 C63 42.5 46 50.5 28.5 46Z';
-const midrib = 'M31.5 44.6 Q48 39.5 64.5 29.2';
-
-const markDefs = (id) =>
-  `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><rect width="100" height="100" fill="#fff"/><path d="${midrib}" fill="none" stroke="#000" stroke-width="2.1" stroke-linecap="round"/></mask>`;
-
-const markShapes = (id, fill) =>
-  `<g fill="${fill}"><path d="${ring}"/><path d="${blade}"/><path d="${leaf}" mask="url(#${id})"/></g>`;
+const markShapes = (fill) => `<g fill="${fill}">${Object.values(paths).map((d) => `<path d="${d}"/>`).join('')}</g>`;
 
 // ---------- Text helpers ----------
 
@@ -74,7 +49,7 @@ const capHeight = (font, size) => (font.tables.os2.sCapHeight / font.unitsPerEm)
 
 // ---------- Horizontal lockup ----------
 
-function lockup({ atlasFill, subFill, markFill, id }) {
+function lockup({ atlasFill, subFill, markFill }) {
   const markSize = 100;
   const atlasSize = 86;
   const atlasCap = capHeight(cinzel, atlasSize);
@@ -102,7 +77,7 @@ function lockup({ atlasFill, subFill, markFill, id }) {
   const therapy = textPath(montserrat, 'THERAPY', subSize, tTherapy, subX, top + atlasCap);
 
   const width = Math.ceil(subX + target + 2);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 100" role="img" aria-label="Atlas Massage Therapy"><defs>${markDefs(id)}</defs>${markShapes(id, markFill)}<path fill="${atlasFill}" d="${atlas.d}"/><path fill="${subFill}" d="${massage.d}${therapy.d}"/></svg>\n`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 100" role="img" aria-label="Atlas Massage Therapy">${markShapes(markFill)}<path fill="${atlasFill}" d="${atlas.d}"/><path fill="${subFill}" d="${massage.d}${therapy.d}"/></svg>\n`;
   return { svg, width };
 }
 
@@ -111,18 +86,51 @@ function lockup({ atlasFill, subFill, markFill, id }) {
 const outDir = join(root, 'src/assets/logo');
 mkdirSync(outDir, { recursive: true });
 
-const inline = lockup({ atlasFill: 'currentColor', subFill: 'var(--logo-accent, ' + GREEN + ')', markFill: 'var(--logo-accent, ' + GREEN + ')', id: 'atlas-leaf-cut' });
+const inline = lockup({ atlasFill: 'currentColor', subFill: 'var(--logo-accent, ' + GREEN + ')', markFill: 'var(--logo-accent, ' + GREEN + ')' });
 writeFileSync(join(outDir, 'logo.svg'), inline.svg);
 
-const dark = lockup({ atlasFill: '#16241B', subFill: GREEN, markFill: GREEN, id: 'm' });
+const dark = lockup({ atlasFill: '#16241B', subFill: GREEN, markFill: GREEN });
 writeFileSync(join(root, 'public/logo.svg'), dark.svg);
-const light = lockup({ atlasFill: '#FFFFFF', subFill: GREEN, markFill: GREEN, id: 'm' });
+const light = lockup({ atlasFill: '#FFFFFF', subFill: GREEN, markFill: GREEN });
 writeFileSync(join(root, 'public/logo-light.svg'), light.svg);
 
-const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs>${markDefs('m')}</defs>${markShapes('m', GREEN)}</svg>\n`;
+const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${markShapes(GREEN)}</svg>\n`;
 writeFileSync(join(outDir, 'mark.svg'), mark.replace(`fill="${GREEN}"`, 'fill="currentColor"'));
 
-const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 108 108"><defs>${markDefs('m')}</defs>${markShapes('m', GREEN)}</svg>\n`;
+const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 108 108">${markShapes(GREEN)}</svg>\n`;
 writeFileSync(join(root, 'public/favicon.svg'), favicon);
+
+// Shared with HeroRing and other components so every copy of the mark is identical.
+writeFileSync(join(outDir, 'mark-paths.json'), JSON.stringify(paths, null, 2) + '\n');
+
+// ---------- PNG and ICO icons ----------
+
+const iconPng = (size, padding) => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="${-padding} ${-padding} ${100 + padding * 2} ${100 + padding * 2}"><rect x="${-padding}" y="${-padding}" width="100%" height="100%" fill="#fff"/>${markShapes(GREEN)}</svg>`;
+  return new Resvg(svg).render().asPng();
+};
+
+writeFileSync(join(root, 'public/apple-touch-icon.png'), iconPng(180, 18));
+writeFileSync(join(root, 'public/icon-512.png'), iconPng(512, 18));
+
+// favicon.ico holds PNG images at 16, 32 and 48px.
+const icoSizes = [16, 32, 48];
+const images = icoSizes.map((s) => iconPng(s, 4));
+const header = Buffer.alloc(6 + 16 * images.length);
+header.writeUInt16LE(0, 0);
+header.writeUInt16LE(1, 2);
+header.writeUInt16LE(images.length, 4);
+let offset = header.length;
+images.forEach((img, i) => {
+  const e = 6 + i * 16;
+  header.writeUInt8(icoSizes[i], e);
+  header.writeUInt8(icoSizes[i], e + 1);
+  header.writeUInt16LE(1, e + 4);
+  header.writeUInt16LE(32, e + 6);
+  header.writeUInt32LE(img.length, e + 8);
+  header.writeUInt32LE(offset, e + 12);
+  offset += img.length;
+});
+writeFileSync(join(root, 'public/favicon.ico'), Buffer.concat([header, ...images]));
 
 console.log(`Logo written (lockup ${inline.width}x100).`);

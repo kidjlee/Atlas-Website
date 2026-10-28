@@ -8,8 +8,10 @@ import HoursTable from '../components/HoursTable.astro';
 import StaffCard from '../components/StaffCard.astro';
 import BookingBand from '../components/BookingBand.astro';
 import Icon from '../components/Icon.astro';
+import ContactCards from '../components/ContactCards.astro';
 import { clinic, formatPrice, maps, openDaysSummary, therapists, treatmentGroups } from '../data/site';
 import { url } from '../lib/url';
+import mark from '../assets/logo/mark-paths.json';
 
 import heroPhoto from '../assets/photos/hero-shoulder.jpg';
 import aboutPhoto from '../assets/photos/intro-back.jpg';
@@ -58,38 +60,11 @@ const highlights = [
       />
     </div>
 
-    <!-- Quick facts -->
-    <div class="border-y border-pine/10 bg-white">
-      <div class="shell grid divide-y divide-pine/10 md:grid-cols-3 md:divide-x md:divide-y-0">
-        <a href={clinic.phone.href} class="group flex items-center gap-4 py-6 md:pr-8">
-          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
-            <Icon name="phone" class="size-6" />
-          </span>
-          <span>
-            <span class="block text-sm text-moss">Call or text</span>
-            <span class="block text-xl font-semibold text-pine group-hover:text-leaf-ink">{clinic.phone.display}</span>
-          </span>
-        </a>
-        <div class="flex items-center gap-4 py-6 md:px-8">
-          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
-            <Icon name="clock" class="size-6" />
-          </span>
-          <span>
-            <span class="block text-sm text-moss">Hours</span>
-            <span class="block font-semibold text-pine">Tue &amp; Fri – Sun, 8 AM – 8 PM</span>
-          </span>
-        </div>
-        <a href={maps.link} target="_blank" rel="noopener" class="group flex items-center gap-4 py-6 md:pl-8">
-          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-mist text-leaf-ink">
-            <Icon name="pin" class="size-6" />
-          </span>
-          <span>
-            <span class="block text-sm text-moss">Find us</span>
-            <span class="block font-semibold text-pine group-hover:text-leaf-ink">
-              {clinic.address.unit}, {clinic.address.street}
-            </span>
-          </span>
-        </a>
+    <!-- Business card -->
+    <div class="border-t border-pine/10 bg-white py-12 md:py-16">
+      <div class="shell">
+        <h2 class="sr-only">Contact details</h2>
+        <ContactCards />
       </div>
     </div>
   </section>
@@ -103,6 +78,7 @@ const highlights = [
           alt="A Registered Massage Therapist treating a client’s back"
           formats={['avif', 'webp']}
           widths={[400, 633]}
+          quality={90}
           sizes="(min-width: 1024px) 30rem, 90vw"
           class="aspect-[4/5] w-full rounded-t-[12rem] rounded-b-round object-cover lg:aspect-[3/4]"
           loading="lazy"
@@ -124,8 +100,11 @@ const highlights = [
           {
             highlights.map((h) => (
               <li class="flex gap-4">
-                <svg class="mt-1 size-6 shrink-0 text-leaf" viewBox="26 20 48 32" aria-hidden="true">
-                  <path d="M28.5 46 C35.5 29.5 52.5 21 71 25.5 C63 42.5 46 50.5 28.5 46Z" fill="currentColor" />
+                <svg class="mt-1 size-6 shrink-0 text-leaf" viewBox="22 2 56 46" aria-hidden="true">
+                  <g fill="currentColor">
+                    <path d={mark.leaf} />
+                    <path d={mark.leafArc} />
+                  </g>
                 </svg>
                 <div>
                   <h3 class="font-sans text-lg font-semibold text-pine">{h.title}</h3>
@@ -211,6 +190,7 @@ const highlights = [
             alt="The Atlas Massage Therapy storefront at night, with its illuminated sign and reception area"
             formats={['avif', 'webp']}
             widths={[560, 1024]}
+            quality={90}
             sizes="(min-width: 1024px) 34rem, 92vw"
             class="w-full"
             loading="lazy"

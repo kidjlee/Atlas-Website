@@ -1,4 +1,6 @@
 ---
+import mark from '../assets/logo/mark-paths.json';
+
 interface Props {
   title: string;
   intro?: string;
@@ -13,9 +15,9 @@ const { title, intro } = Astro.props;
     viewBox="0 0 100 100"
     aria-hidden="true"
   >
-    <path
-      d="M89.71 28.87 A45 45 0 1 1 56.26 5.44 A39.8 39.8 0 1 0 89.71 28.87Z"
-      fill="currentColor"></path>
+    <g fill="currentColor">
+      {Object.values(mark).map((d) => <path d={d} />)}
+    </g>
   </svg>
   <div class="shell relative py-16 md:py-24">
     <h1 class="max-w-3xl text-5xl md:text-6xl">{title}</h1>

@@ -1,0 +1,81 @@
+---
+// The clinic's business card, front and back, rebuilt so every detail is clickable.
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import qrSvg from '../assets/booking-qr.svg?raw';
+import mark from '../assets/logo/mark-paths.json';
+import { clinic, maps } from '../data/site';
+
+const qr = qrSvg.replace('<svg ', '<svg class="size-full" role="img" aria-label="QR code to book on JaneApp" ');
+---
+
+<div class="mx-auto grid max-w-xl gap-5 lg:max-w-none lg:grid-cols-2 lg:gap-8">
+  <!-- Front -->
+  <div
+    class="flex flex-col justify-center gap-8 rounded-soft bg-[#0b0d0c] px-7 py-9 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.55)] sm:px-10 md:aspect-[7/4] md:py-0"
+  >
+    <Logo tone="light" class="h-11 w-auto sm:h-13" />
+    <a
+      href={maps.link}
+      target="_blank"
+      rel="noopener"
+      class="group flex items-start gap-3 text-lg leading-snug text-white/90 sm:pl-14"
+    >
+      <Icon name="pin" class="mt-0.5 size-6 shrink-0 text-leaf" />
+      <span class="group-hover:text-white group-hover:underline group-hover:underline-offset-4">
+        {clinic.address.unit}, {clinic.address.street}<br />
+        {clinic.address.city}, {clinic.address.region} {clinic.address.postalCode}
+      </span>
+    </a>
+  </div>
+
+  <!-- Back -->
+  <div
+    class="relative isolate flex flex-col gap-7 overflow-hidden rounded-soft border border-pine/10 bg-white px-7 py-9 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.35)] sm:flex-row sm:items-center sm:justify-between sm:px-10 md:aspect-[7/4] md:py-0 lg:px-8 xl:px-10"
+  >
+    <svg
+      class="pointer-events-none absolute -right-24 -bottom-16 -z-10 w-72 text-leaf/15 sm:-right-16"
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+    >
+      <g fill="currentColor">{Object.values(mark).map((d) => <path d={d} />)}</g>
+    </svg>
+
+    <div class="flex min-w-0 flex-col gap-5">
+      <Logo class="h-10 w-auto sm:h-11" />
+      <ul class="space-y-3">
+        <li>
+          <a href={clinic.phone.href} class="group flex items-center gap-3 text-lg font-medium text-ink">
+            <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-leaf-ink text-white">
+              <Icon name="phone" class="size-5" />
+            </span>
+            <span class="whitespace-nowrap group-hover:text-leaf-ink">{clinic.phone.display}</span>
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${clinic.email}`} class="group flex items-center gap-3 text-base font-medium text-ink">
+            <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-leaf-ink text-white">
+              <Icon name="mail" class="size-5" />
+            </span>
+            <span class="min-w-0 [overflow-wrap:anywhere] group-hover:text-leaf-ink sm:whitespace-nowrap lg:text-sm xl:text-base">{clinic.email}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <a
+      href={clinic.bookingUrl}
+      target="_blank"
+      rel="noopener"
+      class="group flex shrink-0 flex-row items-center gap-4 self-start sm:flex-col sm:gap-2 sm:self-center"
+      aria-label="Book now (opens JaneApp in a new tab)"
+    >
+      <span class="block size-24 rounded-xl border-2 border-leaf-ink bg-white p-2 text-ink sm:size-28 lg:size-24 xl:size-28" set:html={qr} />
+      <span
+        class="rounded-full bg-leaf-ink px-4 py-1.5 text-sm font-bold tracking-wide text-white uppercase transition-colors group-hover:bg-pine"
+      >
+        Book now
+      </span>
+    </a>
+  </div>
+</div>
