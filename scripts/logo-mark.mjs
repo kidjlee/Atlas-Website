@@ -3,38 +3,47 @@
 // measured clockwise from 3 o'clock (SVG's y axis points down).
 
 const r2 = (n) => Math.round(n * 100) / 100;
-
-const point = (cx, cy, radius, deg) => {
-  const a = (deg * Math.PI) / 180;
-  return [cx + radius * Math.cos(a), cy + radius * Math.sin(a)];
+const smoothstep = (a, b, x) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
 };
 
 /**
- * A crescent that hugs a circle and tapers to points at both ends.
- * The outer edge follows the circle from `from` to `to` (clockwise); the inner
- * edge is a second arc through the same two end points, placed so the crescent
- * is `thickness` wide at its middle.
+ * A tapered stroke that runs around the centre. For t from 0 to 1 it follows
+ * angle(t), with its outer edge at outer(t) and a width of width(t).
  */
-function crescent({ cx, cy, radius, from, to, thickness }) {
-  const span = (((to - from) % 360) + 360) % 360;
-  const half = ((360 - span) / 2) * (Math.PI / 180);
-  // Inner circle centre sits toward the opening by d, with radius rIn = radius - thickness + d.
-  const d = (radius ** 2 - (radius - thickness) ** 2) / (2 * (radius - thickness) + 2 * radius * Math.cos(half));
-  const rIn = radius - thickness + d;
-  const [ax, ay] = point(cx, cy, radius, from);
-  const [bx, by] = point(cx, cy, radius, to);
-  const large = span > 180 ? 1 : 0;
-  return (
-    `M${r2(ax)} ${r2(ay)}A${r2(radius)} ${r2(radius)} 0 ${large} 1 ${r2(bx)} ${r2(by)}` +
-    `A${r2(rIn)} ${r2(rIn)} 0 ${large} 0 ${r2(ax)} ${r2(ay)}Z`
-  );
+function stroke({ angle, outer, width, steps = 72 }) {
+  const outside = [];
+  const inside = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const a = (angle(t) * Math.PI) / 180;
+    const ro = outer(t);
+    const ri = ro - width(t);
+    outside.push([50 + ro * Math.cos(a), 50 + ro * Math.sin(a)]);
+    inside.push([50 + ri * Math.cos(a), 50 + ri * Math.sin(a)]);
+  }
+  const pts = [...outside, ...inside.reverse()];
+  return `M${pts.map(([x, y]) => `${r2(x)} ${r2(y)}`).join('L')}Z`;
 }
 
-// Main crescent: from 9 o'clock, around the bottom, up to about 1 o'clock.
-export const ring = crescent({ cx: 50, cy: 50, radius: 45, from: -36, to: 180, thickness: 10.4 });
+const R = 45;
 
-// Upper arc: from 12 o'clock down the left side, finishing just inside the main crescent.
-export const swoosh = crescent({ cx: 50.4, cy: 48.6, radius: 44.4, from: 157, to: -88, thickness: 8 });
+// Main ring: starts as a thin tail just outside the upper swoosh at 9 o'clock,
+// runs round the bottom (its heaviest part) and tapers out at about 1 o'clock.
+export const ring = stroke({
+  angle: (t) => 186 - t * 222,
+  outer: (t) => R + 1.6 * (1 - smoothstep(0, 0.2, t)),
+  width: (t) => 10.4 * Math.sin(Math.PI * t) ** 0.78,
+});
+
+// Upper swoosh: starts at 12 o'clock on the same circle, sweeps round the top
+// left, then its tail curls inward, crossing inside the start of the main ring.
+export const swoosh = stroke({
+  angle: (t) => 274 - t * 124,
+  outer: (t) => R - 8.5 * smoothstep(0.6, 1, t),
+  width: (t) => 7 * Math.sin(Math.PI * t) ** 0.7,
+});
 
 // Leaf pointing toward the opening, and the thin arc that sits just above it.
 export const leaf = 'M24.6 33.6C33.5 21.8 50 15.6 75 19.8C66 40.5 45.5 47.5 24.6 33.6Z';

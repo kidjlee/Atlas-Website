@@ -13,7 +13,7 @@ const { image, alt, position = '50% 50%' } = Astro.props;
 
 // The photo circle sits inside the ring (all values are % of the frame, matching the
 // mark's 100 x 100 box). The leaf is the logo's leaf, scaled down into the ring's opening.
-const photo = { cx: 49, cy: 47.5, r: 35 };
+const photo = { cx: 50, cy: 49, r: 34 };
 ---
 
 <div class="hero-ring relative mx-auto aspect-square w-full max-w-[28rem] lg:max-w-[34rem]">
@@ -35,7 +35,7 @@ const photo = { cx: 49, cy: 47.5, r: 35 };
     />
   </div>
   <svg class="hero-ring__frame absolute inset-0 size-full overflow-visible text-leaf" viewBox="0 0 100 100" aria-hidden="true">
-    <g fill="currentColor">
+    <g fill="currentColor" stroke="#fff" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">
       <path d={mark.ring} />
       <path d={mark.swoosh} />
     </g>
