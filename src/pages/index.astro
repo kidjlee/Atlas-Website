@@ -181,27 +181,32 @@ const highlights = [
         <ContactCards />
       </div>
 
-      <div class="mx-auto mt-5 grid max-w-xl gap-5 lg:mt-8 lg:max-w-5xl lg:grid-cols-2 lg:gap-8">
-        <figure class="overflow-hidden rounded-soft shadow-[0_24px_48px_-24px_rgba(15,45,30,0.45)]">
+      <div class="mx-auto mt-5 grid max-w-xl gap-5 lg:mt-8 lg:max-w-5xl lg:grid-cols-[3fr_2fr] lg:gap-8">
+        <figure class="relative self-center overflow-hidden rounded-soft shadow-[0_24px_48px_-24px_rgba(15,45,30,0.45)]">
           <Picture
             src={storefront}
             alt="The Atlas Massage Therapy storefront at night, with its illuminated sign and reception area"
             formats={['avif', 'webp']}
             widths={[560, 1024]}
             quality={90}
-            sizes="(min-width: 1024px) 31rem, 92vw"
-            class="size-full object-cover"
+            sizes="(min-width: 1024px) 36rem, 92vw"
+            class="h-auto w-full"
             loading="lazy"
           />
-        </figure>
-        <div
-          class="flex flex-col rounded-soft border border-pine/10 bg-white p-4 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.25)] sm:p-8"
-        >
-          <HoursTable />
-          <a href={maps.directions} target="_blank" rel="noopener" class="btn btn-secondary mt-6 w-full lg:mt-auto">
-            <Icon name="directions" class="size-5" />
+          <a
+            href={maps.directions}
+            target="_blank"
+            rel="noopener"
+            class="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-pine shadow-lg backdrop-blur transition-colors hover:bg-white hover:text-leaf-ink"
+          >
+            <Icon name="directions" class="size-4" />
             Get directions
           </a>
+        </figure>
+        <div
+          class="flex flex-col justify-center rounded-soft border border-pine/10 bg-white p-4 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.25)] sm:p-6 lg:[&_td]:py-2 lg:[&_th]:py-2"
+        >
+          <HoursTable />
         </div>
       </div>
     </div>
