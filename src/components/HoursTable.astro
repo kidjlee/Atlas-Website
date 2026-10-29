@@ -35,7 +35,7 @@ const { showStatus = true, class: className } = Astro.props;
                 Today
               </span>
             </th>
-            <td class:list={['py-2.5 pr-3 text-right tabular-nums', d.open ? 'text-ink' : 'text-moss']}>
+            <td class:list={['py-2.5 pr-3 text-right whitespace-nowrap tabular-nums', d.open ? 'text-ink' : 'text-moss']}>
               {formatHours(d)}
             </td>
           </tr>

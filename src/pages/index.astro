@@ -59,14 +59,6 @@ const highlights = [
         alt="A massage therapist working on a client’s neck and shoulders"
       />
     </div>
-
-    <!-- Business card -->
-    <div class="border-t border-pine/10 bg-white py-12 md:py-16">
-      <div class="shell">
-        <h2 class="sr-only">Contact details</h2>
-        <ContactCards />
-      </div>
-    </div>
   </section>
 
   <!-- About -->
@@ -176,40 +168,39 @@ const highlights = [
 
   <!-- Visit -->
   <section>
-    <div class="shell grid gap-12 py-20 md:py-28 lg:grid-cols-2 lg:gap-20">
-      <div>
-        <h2 class="text-4xl md:text-5xl">Hours and location</h2>
-        <p class="mt-4 text-lg text-moss">{clinic.bookingNote}</p>
-        <HoursTable class="mt-8" />
+    <div class="shell py-20 md:py-28">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="text-sm font-semibold tracking-[0.2em] text-leaf-ink uppercase">Visit us</p>
+        <h2 class="mt-3 text-4xl md:text-5xl">Hours and location</h2>
+        <p class="mt-4 text-lg text-moss">
+          Find us on Marshall Road in Abbotsford. Tap the card to call, email, or book.
+        </p>
       </div>
-      <div class="flex flex-col">
-        <figure class="overflow-hidden rounded-soft border border-pine/10">
+
+      <div class="mx-auto mt-12 max-w-5xl md:mt-16">
+        <ContactCards />
+      </div>
+
+      <div class="mx-auto mt-5 grid max-w-xl gap-5 lg:mt-8 lg:max-w-5xl lg:grid-cols-2 lg:gap-8">
+        <figure class="overflow-hidden rounded-soft shadow-[0_24px_48px_-24px_rgba(15,45,30,0.45)]">
           <Picture
             src={storefront}
             alt="The Atlas Massage Therapy storefront at night, with its illuminated sign and reception area"
             formats={['avif', 'webp']}
             widths={[560, 1024]}
             quality={90}
-            sizes="(min-width: 1024px) 34rem, 92vw"
-            class="w-full"
+            sizes="(min-width: 1024px) 31rem, 92vw"
+            class="size-full object-cover"
             loading="lazy"
           />
         </figure>
-        <address class="mt-8 text-lg not-italic">
-          <span class="block font-display text-2xl text-pine">{clinic.name}</span>
-          <span class="mt-2 block text-ink">
-            {clinic.address.unit}, {clinic.address.street}<br />
-            {clinic.address.city}, {clinic.address.region} {clinic.address.postalCode}
-          </span>
-        </address>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a href={maps.directions} target="_blank" rel="noopener" class="btn btn-secondary">
+        <div
+          class="flex flex-col rounded-soft border border-pine/10 bg-white p-4 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.25)] sm:p-8"
+        >
+          <HoursTable />
+          <a href={maps.directions} target="_blank" rel="noopener" class="btn btn-secondary mt-6 w-full lg:mt-auto">
             <Icon name="directions" class="size-5" />
             Get directions
-          </a>
-          <a href={url('contact/')} class="btn btn-secondary">
-            <Icon name="mail" class="size-5" />
-            Contact details
           </a>
         </div>
       </div>

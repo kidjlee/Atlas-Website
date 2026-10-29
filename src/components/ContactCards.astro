@@ -12,14 +12,15 @@ const qr = qrSvg.replace('<svg ', '<svg class="size-full" role="img" aria-label=
 <div class="mx-auto grid max-w-xl gap-5 lg:max-w-none lg:grid-cols-2 lg:gap-8">
   <!-- Front -->
   <div
-    class="flex flex-col justify-center gap-8 rounded-soft bg-[#0b0d0c] px-7 py-9 shadow-[0_24px_48px_-24px_rgba(15,45,30,0.55)] sm:px-10 md:aspect-[7/4] md:py-0"
+    class="flex flex-col items-center justify-center gap-8 rounded-soft bg-[#0b0d0c] px-7 py-10 text-center shadow-[0_24px_48px_-24px_rgba(15,45,30,0.55)] sm:px-10 md:aspect-[7/4] md:py-0"
   >
     <Logo tone="light" class="h-11 w-auto sm:h-13" />
+    <span class="h-px w-16 bg-leaf/50" aria-hidden="true"></span>
     <a
       href={maps.link}
       target="_blank"
       rel="noopener"
-      class="group flex items-start gap-3 text-lg leading-snug text-white/90 sm:pl-14"
+      class="group flex items-start gap-3 text-left text-lg leading-snug text-white/90"
     >
       <Icon name="pin" class="mt-0.5 size-6 shrink-0 text-leaf" />
       <span class="group-hover:text-white group-hover:underline group-hover:underline-offset-4">
