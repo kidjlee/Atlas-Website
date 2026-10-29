@@ -41,14 +41,15 @@ export const ring = stroke({
 // left, then its tail eases inward, crossing inside the start of the main ring.
 export const swoosh = stroke({
   angle: (t) => 274 - t * 128,
-  outer: (t) => R - 8 * smoothstep(0.5, 1.05, t),
+  outer: (t) => R - 8 * Math.max(0, (t - 0.42) / 0.58) ** 1.7,
   width: (t) => 7 * Math.sin(Math.PI * t) ** 0.7,
 });
 
-// Leaf: a short, rounded point on the left, and a tip on the right whose lower edge
-// hooks upward. The thin crease above it curls down at its right end.
+// Leaf, drawn as one piece: a short rounded point on the left and a tip on the right
+// whose lower edge hooks upward. A thin crease runs in from the upper left; the strip
+// above it joins the body and tapers into the right tip.
 export const leaf =
-  'M26.5 34.2C33 23.5 46 16.6 60 17.2C67 17.5 72.5 18.6 77.2 20.6C71.6 22 68.6 25.4 65.6 29.4C58 39.6 42 44.2 26.5 34.2Z';
-export const leafArc = 'M37.6 17.8Q52 10.4 64.4 14.6Q66.6 15.8 65.6 18Q53 13 37.6 17.8Z';
+  'M26.5 34.2C33 23.8 47 15.8 65 18.4C60 15 50 13.6 37.6 17.8C44 11.5 54 9.4 63.5 10.6C70 11.4 74.5 15.5 77.2 20.6' +
+  'C71.6 22 68.6 25.4 65.6 29.4C58 41 41 46 26.5 34.2Z';
 
-export const paths = { ring, swoosh, leaf, leafArc };
+export const paths = { ring, swoosh, leaf };
